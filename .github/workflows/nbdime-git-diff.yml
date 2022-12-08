@@ -1,0 +1,27 @@
+name: nbdime-git-diff
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.9.16"
+
+    - name: Install dependencies
+      run: pip install nbdime ipython_genutils
+
+    - name: Configure nbdime diff/merge drivers for Git
+      run: nbdime config-git --enable --global
+
+    - name: nbdime git diff
+      run: git diff HEAD^ HEAD
